@@ -41,10 +41,12 @@ import navic.composeapp.generated.resources.option_cover_art_rounding
 import navic.composeapp.generated.resources.option_cover_art_size
 import navic.composeapp.generated.resources.option_dynamic_colour
 import navic.composeapp.generated.resources.option_grid_items_per_row
+import navic.composeapp.generated.resources.option_marquee_duration
 import navic.composeapp.generated.resources.option_navbar_tab_positions
 import navic.composeapp.generated.resources.option_short_navigation_bar
 import navic.composeapp.generated.resources.option_show_progress_in_bar
 import navic.composeapp.generated.resources.option_static_player_background
+import navic.composeapp.generated.resources.option_swipe_to_skip
 import navic.composeapp.generated.resources.option_system_font
 import navic.composeapp.generated.resources.option_use_detached_bar
 import navic.composeapp.generated.resources.option_use_marquee_text
@@ -65,6 +67,7 @@ import paige.navic.ui.component.common.Stepper
 import paige.navic.ui.component.dialog.NavtabsDialog
 import paige.navic.ui.component.layout.NestedTopBar
 import paige.navic.ui.theme.mapleMono
+import kotlin.math.roundToInt
 
 @Composable
 fun SettingsAppearanceScreen() {
@@ -248,6 +251,33 @@ fun SettingsAppearanceScreen() {
 							onCheckedChange = { Settings.shared.useMarquee = it }
 						)
 					}
+					if (Settings.shared.useMarquee) {
+						FormRow {
+							Column(Modifier.fillMaxWidth()) {
+								Row(
+									modifier = Modifier.fillMaxWidth(),
+									horizontalArrangement = Arrangement.SpaceBetween
+								) {
+									Text(stringResource(Res.string.option_marquee_duration))
+									Text(
+										"${Settings.shared.marqueeDuration}",
+										fontFamily = mapleMono(),
+										fontWeight = FontWeight(400),
+										fontSize = 13.sp,
+										color = MaterialTheme.colorScheme.onSurfaceVariant,
+									)
+								}
+								Slider(
+									value = Settings.shared.marqueeDuration.toFloat(),
+									onValueChange = {
+										Settings.shared.marqueeDuration = it.roundToInt()
+									},
+									valueRange = 500f..5000f,
+									steps = 8
+								)
+							}
+						}
+					}
 				}
 				Form {
 					FormRow {
@@ -262,6 +292,13 @@ fun SettingsAppearanceScreen() {
 						SettingSwitch(
 							checked = Settings.shared.detachedBar,
 							onCheckedChange = { Settings.shared.detachedBar = it }
+						)
+					}
+					FormRow {
+						Text(stringResource(Res.string.option_swipe_to_skip))
+						SettingSwitch(
+							checked = Settings.shared.swipeToSkip,
+							onCheckedChange = { Settings.shared.swipeToSkip = it }
 						)
 					}
 					FormRow {
